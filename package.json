@@ -1,6 +1,6 @@
 {
-  "name": "vue-transformer",
-  "version": "1.0.29",
+  "name": "vue2-transformer-to-vue3",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "vue",
     "gogocode"
   ],
-  "author": "zhuori",
+  "author": "joey.wu",
   "license": "ISC",
   "dependencies": {
     "css-tree": "^1.1.3",
