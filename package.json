@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "t": "node ./t.js",
-    "prepublishOnly": "npm run test"
+    "t": "node ./t.js"
   },
   "files": [
     "index.js",
