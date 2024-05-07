@@ -1,5 +1,5 @@
+import path from 'path-browserify'
 const $ = require('gogocode');
-const path = require('path');
 const prettier = require('prettier');
 const fs = require('fs');
 

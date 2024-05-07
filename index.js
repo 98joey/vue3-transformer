@@ -1,4 +1,5 @@
-const rules = require('./src/rules');
+// const rules = require('./src/vue-rules');
+const rules = require('./src/rules')
 const prettier = require('prettier');
 const collection = require('./src/collection');
 
@@ -36,10 +37,13 @@ const transform = function (fileInfo, api, options) {
 
     const outAst = rulesToBeApplied.reduce((ast, ruleCfg) => {
         if (!ruleCfg.test.test(fileInfo.path)) {
+            console.log('return')
             return ast;
         }
         try {
-            return ruleCfg.rule(ast, api, { ...options, filePath: fileInfo.path });
+            const ah = ruleCfg.rule(ast, api, { ...options, filePath: fileInfo.path });
+            console.log('change le', ah)
+            return ah
         } catch (error) {
             console.log(
                 `文件转换异常，规则：${ruleCfg.name}，文件：${fileInfo.path}`,
@@ -48,6 +52,8 @@ const transform = function (fileInfo, api, options) {
             return ast;
         }
     }, ast);
+
+    console.log('outAst', outAst)
     // 命令行的params参数没有配置format=true 则默认格式化代码，如果命令行的params配置了format参数则使用该配置
     const format = options.format === undefined || options.format === true;
 
@@ -65,4 +71,51 @@ const transform = function (fileInfo, api, options) {
 const preTransform = function (api, options) {
     collection(api, options);
 }
-module.exports = { preTransform, transform };
+
+const myTransform = function (ast, api,  options) {
+    const $ = api.gogocode;
+
+    const includeRules = options['include-rules'] ? options['include-rules'].split(',') : rules.map(r => r.name);
+    const excludeRules = options['exclude-rules'] ? options['exclude-rules'].split(',') : [];
+    
+    const rulesToBeApplied = rules.filter(r => includeRules.includes(r.name) && !excludeRules.includes(r.name));
+
+    if(!rulesToBeApplied.length) {
+        throw Error(`No valid rule found.`);
+    }
+
+    const outAst = rulesToBeApplied.reduce((ast, ruleCfg) => {
+        try { 
+            return ruleCfg.rule(ast, api, { ...options});
+        } catch (error) {
+            console.log(
+                `文件转换异常，规则：${ruleCfg.name}`,
+                error
+            );
+            return ast;
+        }
+    }, ast);
+    console.log('this is outAst:', outAst)
+    // 命令行的params参数没有配置format=true 则默认格式化代码，如果命令行的params配置了format参数则使用该配置
+    const format = options.format === undefined || options.format === true;
+
+    const a = outAst.generate()
+    const b = prettier.format(a, {
+        trailingComma: 'es5',
+        tabWidth: 2,
+        semi: false,
+        singleQuote: true,
+        printWidth: 80,
+        parser: 'vue',
+    })
+
+    return format ? prettier.format(outAst.generate(), {
+        trailingComma: 'es5',
+        tabWidth: 2,
+        semi: false,
+        singleQuote: true,
+        printWidth: 80,
+        parser:  'vue',
+    }) : outAst.generate()
+};
+module.exports = { preTransform, transform, myTransform };

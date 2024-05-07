@@ -2,6 +2,8 @@
 module.exports = function (sourceAst) {
     // 迁移指南: https://v3.cn.vuejs.org/guide/migration/introduction.html#%E7%A7%BB%E9%99%A4-api
 
+    console.log('this is ast:', sourceAst)
+
     //开始处理js逻辑
     const scriptAST = sourceAst.parseOptions && sourceAst.parseOptions.language === 'vue'
         ? sourceAst.find('<script></script>')
