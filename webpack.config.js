@@ -14,7 +14,9 @@ module.exports = {
       assert: require.resolve("assert/"),
       constants: require.resolve("constants-browserify"),
       stream: require.resolve("stream-browserify"),
-      fs: require.resolve("fs-extra"),
+      fs: require.resolve("browserify-fs"),
+      url: require.resolve("url"),
+      buffer: require.resolve("buffer/"),
     }
   },
   // 输出配置，根据入口生成不同的输出文件
