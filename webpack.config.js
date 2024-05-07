@@ -1,4 +1,6 @@
 const path = require('path');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   // 多入口配置，可以为每种模块格式定义一个入口
@@ -54,7 +56,14 @@ module.exports = {
   },
   // 插件列表，可以添加各种插件以扩展Webpack的功能
   plugins: [
-    // 你可以在这里添加Webpack插件，如压缩插件、DTS声明文件生成插件等
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env.NODE_DEBUG": JSON.stringify(false)
+      // Buffer: JSON.stringify(require("buffer/").Buffer)
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"]
+    })
   ],
   // 外部依赖项，不将其包含在最终的bundle中
   externals: {
