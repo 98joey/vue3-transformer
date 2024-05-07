@@ -1,9 +1,6 @@
 # Node.js
 node_modules/
 
-# Build output
-dist/
-
 # Dependency directories
 /.pnp/
 .pnp.js
